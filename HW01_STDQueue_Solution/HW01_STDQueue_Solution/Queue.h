@@ -48,4 +48,9 @@ struct Queue
 	{
 
 	}
+
+	//Variables
+	Placeholder* arr;
+	int arrSize;
+	int queueSize;
 };
