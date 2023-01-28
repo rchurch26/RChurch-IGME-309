@@ -127,9 +127,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Alberto.cpp" />
     <ClCompile Include="Main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Alberto.h" />
     <ClInclude Include="Main.h" />
     <ClInclude Include="Queue.h" />
   </ItemGroup>

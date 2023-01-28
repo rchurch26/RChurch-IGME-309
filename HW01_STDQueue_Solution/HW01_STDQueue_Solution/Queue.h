@@ -57,25 +57,51 @@ struct Queue
 	//Push Method
 	void Push(Placeholder info)
 	{
-
+		if (queueSize == arrSize)
+		{
+			Placeholder* newArr = new Placeholder[arrSize * 2];
+			arrSize *= 2;
+			std::copy(arr, arr + arrSize, newArr);
+			delete[] arr;
+			arr = newArr;
+		}
+		arr[queueSize] = info;
+		queueSize++;
+		for (int i = 0; i < queueSize; i++)
+		{
+			for (int j = 0; j < queueSize - 1; j++)
+			{
+				if (arr[j] > arr[j + 1])
+				{
+					std::swap(arr[j], arr[j + 1]);
+				}
+			}
+		}
 	}
 	//Pop Method
 	void Pop()
 	{
 		if (queueSize <= 0)
 		{
-			return NULL;
+			std::cout << "Nothing to Pop" << std::endl;
+		}
+		for (int i = 0; i < queueSize; i++)
+		{
+			arr[i] = arr[i + 1];
 		}
 		queueSize--;
 	}
 	//Print Method
 	void Print()
 	{
-		for (int i = 0; i < queueSize - 1; i++)
+		if (queueSize <= 0)
 		{
-			std::cout << arr[i] << ", ";
+			std::cout << "Queue is Empty" << std::endl;
 		}
-		std::cout << arr[queueSize - 1] << std::endl;
+		for (int i = 0; i < queueSize; i++)
+		{
+			std::cout << i + 1 << ": " << arr[i] << std::endl;
+		}
 	}
 	//GetSize Method
 	int GetSize()
