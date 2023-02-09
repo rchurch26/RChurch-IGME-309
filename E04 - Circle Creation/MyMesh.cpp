@@ -16,18 +16,39 @@ void MyMesh::GenerateCircle(float a_fRadius, int a_nSubdivisions, vector3 a_v3Co
 		Calculate a_nSubdivisions number of points around a center point in a radial manner
 		then call the AddTri function to generate a_nSubdivision number of faces
 	*/
+	//Long Way
+	/*
+	* Circle 4 Sub Div
+	AddTri(vector3(0.0f, 0.0f, 0.0f), vector3(1.0f, 0.0f, 0.0f), vector3(0.0f, 1.0f, 0.0f));
+	AddTri(vector3(0.0f, 0.0f, 0.0f), vector3(0.0f, 1.0f, 0.0f), vector3(-1.0f, 0.0f, 0.0f));
+	AddTri(vector3(0.0f, 0.0f, 0.0f), vector3(-1.0f, 0.0f, 0.0f), vector3(0.0f, -1.0f, 0.0f));
+	AddTri(vector3(0.0f, 0.0f, 0.0f), vector3(0.0f, -1.0f, 0.0f), vector3(1.0f, 0.0f, 0.0f));
+
+	Circle 8 Sub Div(Somewhat)
+	AddTri(vector3(0.0f, 0.0f, 0.0f), vector3(1.0f, 0.0f, 0.0f), vector3(0.75f, 0.75f, 0.0f));
+	AddTri(vector3(0.0f, 0.0f, 0.0f), vector3(0.75f, 0.75f, 0.0f), vector3(0.0f, 1.0f, 0.0f));
+	AddTri(vector3(0.0f, 0.0f, 0.0f), vector3(0.0f, 1.0f, 0.0f), vector3(-0.75f, 0.75f, 0.0f));
+	AddTri(vector3(0.0f, 0.0f, 0.0f), vector3(-0.75f, 0.75f, 0.0f), vector3(-1.0f, 0.0f, 0.0f));
+	*/
+
 	std::vector<vector3> vertex;
-	float angle = 0;
+	float angle = PI * 2.0f / a_nSubdivisions;;
 	for (int i = 0; i < a_nSubdivisions; i++)
 	{
-		angle += PI * 2.0f / a_nSubdivisions;
-		vertex.push_back(vector3(cos(angle) * a_fRadius, sin(angle) * a_fRadius, 0.0f));
+		vector3 v = vector3(glm::cos(angle * i) * a_fRadius, glm::sin(angle * i) * a_fRadius, 0.0f);
+		vertex.push_back(v);
+	}
+	for (int i = 0; i < a_nSubdivisions; i++)
+	{
+		AddTri(vector3(0.0f, 0.0f, 1.0f),
+			vertex[i],
+			vertex[(i + 1) % a_nSubdivisions]);
 	}
 	for (int i = 0; i < a_nSubdivisions; i++)
 	{
 		AddTri(vector3(0.0f, 0.0f, 0.0f),
-			vertex[i],
-			vertex[(i + 1) % a_nSubdivisions]);
+			vertex[(i + 1) % a_nSubdivisions],
+			vertex[i]);
 	}
 
 	// Adding information about color

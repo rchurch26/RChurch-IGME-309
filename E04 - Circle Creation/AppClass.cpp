@@ -36,7 +36,8 @@ void Application::Display(void)
 	ClearScreen();
 
 	//Render the mesh
-	m_pMesh->Render(m_pCameraMngr->GetProjectionMatrix(), m_pCameraMngr->GetViewMatrix(), ToMatrix4(m_qArcBall));
+	matrix4 m4ToWorld = glm::translate(vector3(1.0f, 5.0f, 0.0f));
+	m_pMesh->Render(m_pCameraMngr->GetProjectionMatrix(), m_pCameraMngr->GetViewMatrix(), m4ToWorld);
 
 	// draw a skybox
 	m_pModelMngr->AddSkyboxToRenderList();
