@@ -61,7 +61,25 @@ void MyMesh::GenerateCone(float a_fRadius, float a_fHeight, int a_nSubdivisions,
 	Init();
 
 	// Replace this with your code
-	GenerateCube(a_fRadius * 2.0f, a_v3Color);
+	std::vector<vector3> verticies;
+	float angle = PI * 2.0f / a_nSubdivisions;
+	for (int i = 0; i < a_nSubdivisions; i++)
+	{
+		vector3 vertex = vector3(glm::cos(angle * i) * a_fRadius, glm::sin(angle * i) * a_fRadius, a_fHeight);
+		verticies.push_back(vertex);
+	}
+	for (int i = 0; i < a_nSubdivisions; i++)
+	{
+		AddTri(vector3(0.0f, 0.0f, 0.0f),
+			verticies[i],
+			verticies[(i + 1) % a_nSubdivisions]);
+	}
+	for (int i = 0; i < a_nSubdivisions; i++)
+	{
+		AddTri(vector3(0.0f, 0.0f, 0.0f),
+			verticies[(i + 1) % a_nSubdivisions],
+			verticies[i]);
+	}
 	// -------------------------------
 
 	// Adding information about color
