@@ -65,12 +65,12 @@ void MyMesh::GenerateCone(float a_fRadius, float a_fHeight, int a_nSubdivisions,
 	float angle = PI * 2.0f / a_nSubdivisions;
 	for (int i = 0; i < a_nSubdivisions; i++)
 	{
-		vector3 vertex = vector3(glm::cos(angle * i) * a_fRadius, glm::sin(angle * i) * a_fRadius, a_fHeight);
+		vector3 vertex = vector3(glm::cos(angle * i) * a_fRadius, glm::sin(angle * i) * a_fRadius, 0.0f);
 		verticies.push_back(vertex);
 	}
 	for (int i = 0; i < a_nSubdivisions; i++)
 	{
-		AddTri(vector3(0.0f, 0.0f, 0.0f),
+		AddTri(vector3(0.0f, 0.0f, a_fHeight),
 			verticies[i],
 			verticies[(i + 1) % a_nSubdivisions]);
 	}
@@ -103,7 +103,32 @@ void MyMesh::GenerateCylinder(float a_fRadius, float a_fHeight, int a_nSubdivisi
 	Init();
 
 	// Replace this with your code
-	GenerateCube(a_fRadius * 2.0f, a_v3Color);
+	std::vector<vector3> verticies;
+	float angle = PI * 2.0 / a_nSubdivisions;
+	for (int i = 0; i < a_nSubdivisions; i++)
+	{
+		vector3 vertex = vector3(glm::cos(angle * i) * a_fRadius, glm::sin(angle * i) * a_fRadius, 0.0f);
+		verticies.push_back(vertex);
+	}
+	for (int i = 0; i < a_nSubdivisions; i++)
+	{
+		AddTri(vector3(0.0f, 0.0f, 0.0f),
+			verticies[i],
+			verticies[(i + 1) % a_nSubdivisions]);
+	}
+	/*for (int i = 0; i < a_nSubdivisions; i++)
+	{
+		AddQuad(vector3(0.0f, 0.0f, a_fHeight),
+			verticies[i],
+			verticies[i],
+			verticies[];
+	}*/
+	for (int i = 0; i < a_nSubdivisions; i++)
+	{
+		AddTri(vector3(0.0f, a_fHeight, 0.0f),
+			verticies[i] + a_fHeight,
+			verticies[(i + 1) % a_nSubdivisions] + a_fHeight);
+	}
 	// -------------------------------
 
 	// Adding information about color
