@@ -35,7 +35,7 @@ void MyMesh::GenerateCircle(float a_fRadius, int a_nSubdivisions, vector3 a_v3Co
 	float angle = PI * 2.0f / a_nSubdivisions;
 	for (int i = 0; i < a_nSubdivisions; i++)
 	{
-		vector3 v = vector3(glm::cos(angle * i) * a_fRadius, glm::sin(angle * i) * a_fRadius, 0.0f);
+		vector3 v = vector3(glm::cos(angle * i) * a_fRadius, 0.0f, glm::sin(angle * i) * a_fRadius);
 		vertex.push_back(v);
 	}
 	for (int i = 0; i < a_nSubdivisions; i++)
