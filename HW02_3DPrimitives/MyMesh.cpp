@@ -118,16 +118,16 @@ void MyMesh::GenerateCylinder(float a_fRadius, float a_fHeight, int a_nSubdivisi
 	}
 	for (int i = 0; i < a_nSubdivisions; i++)
 	{
-		AddQuad(vector3(0.0f, 0.0f, 0.0f),
+		AddQuad(verticies[(i + 1) % a_nSubdivisions],
 			verticies[i],
-			vector3(0.0f, a_fHeight, 0.0f),
-			verticies[(i + 1) % a_nSubdivisions] + vector3(0.0f, a_fHeight, 0.0f));
+			verticies[(i + 1) % a_nSubdivisions] + vector3(0.0f, a_fHeight, 0.0f),
+			verticies[i] + vector3(0.0f, a_fHeight, 0.0f));
 	}
 	for (int i = 0; i < a_nSubdivisions; i++)
 	{
 		AddTri(vector3(0.0f, a_fHeight, 0.0f),
-			verticies[i] + vector3(0.0f, a_fHeight, 0.0f),
-			verticies[(i + 1) % a_nSubdivisions] + vector3(0.0f, a_fHeight, 0.0f));
+			verticies[(i + 1) % a_nSubdivisions] + vector3(0.0f, a_fHeight, 0.0f),
+			verticies[i] + vector3(0.0f, a_fHeight, 0.0f));
 	}
 	// -------------------------------
 
@@ -158,7 +158,35 @@ void MyMesh::GenerateTube(float a_fOuterRadius, float a_fInnerRadius, float a_fH
 	Init();
 
 	// Replace this with your code
-	GenerateCube(a_fOuterRadius * 2.0f, a_v3Color);
+	std::vector<vector3> outerVerticies;
+	std::vector<vector3> innerVerticies;
+	float angle = PI * 2.0 / a_nSubdivisions;
+	for (int i = 0; i < a_nSubdivisions; i++)
+	{
+		vector3 outerVertex = vector3(glm::cos(angle * i) * a_fOuterRadius, 0.0f, glm::sin(angle * i) * a_fOuterRadius);
+		vector3 innerVertex = vector3(glm::cos(angle * i) * a_fInnerRadius, 0.0f, glm::sin(angle * i) * a_fInnerRadius);
+		outerVerticies.push_back(outerVertex);
+		innerVerticies.push_back(innerVertex);
+	}
+	for (int i = 0; i < a_nSubdivisions; i++)
+	{
+		AddTri(vector3(0.0f, 0.0f, 0.0f),
+			outerVerticies[i],
+			outerVerticies[(i + 1) % a_nSubdivisions]);
+	}
+	for (int i = 0; i < a_nSubdivisions; i++)
+	{
+		AddQuad(outerVerticies[(i + 1) % a_nSubdivisions],
+			outerVerticies[i],
+			outerVerticies[(i + 1) % a_nSubdivisions] + vector3(0.0f, a_fHeight, 0.0f),
+			outerVerticies[i] + vector3(0.0f, a_fHeight, 0.0f));
+	}
+	for (int i = 0; i < a_nSubdivisions; i++)
+	{
+		AddTri(vector3(0.0f, a_fHeight, 0.0f),
+			outerVerticies[(i + 1) % a_nSubdivisions] + vector3(0.0f, a_fHeight, 0.0f),
+			outerVerticies[i] + vector3(0.0f, a_fHeight, 0.0f));
+	}
 	// -------------------------------
 
 	// Adding information about color
