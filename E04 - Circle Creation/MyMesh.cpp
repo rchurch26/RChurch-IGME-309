@@ -40,7 +40,7 @@ void MyMesh::GenerateCircle(float a_fRadius, int a_nSubdivisions, vector3 a_v3Co
 	}
 	for (int i = 0; i < a_nSubdivisions; i++)
 	{
-		AddTri(vector3(0.0f, 0.0f, 1.0f),
+		AddTri(vector3(0.0f, 0.0f, 0.0f),
 			vertex[i],
 			vertex[(i + 1) % a_nSubdivisions]);
 	}

@@ -61,19 +61,24 @@ void MyMesh::GenerateCone(float a_fRadius, float a_fHeight, int a_nSubdivisions,
 	Init();
 
 	// Replace this with your code
+	//Create List of Verticies
 	std::vector<vector3> verticies;
+	//Grab Angle
 	float angle = PI * 2.0f / a_nSubdivisions;
+	//Fill List of Verticies
 	for (int i = 0; i < a_nSubdivisions; i++)
 	{
 		vector3 vertex = vector3(glm::cos(angle * i) * a_fRadius, 0.0f, glm::sin(angle * i) * a_fRadius);
 		verticies.push_back(vertex);
 	}
+	//Create Bottom Circle of Cone
 	for (int i = 0; i < a_nSubdivisions; i++)
 	{
 		AddTri(vector3(0.0f, a_fHeight, 0.0f),
 			verticies[i],
 			verticies[(i + 1) % a_nSubdivisions]);
 	}
+	//Create Triangles of Cone
 	for (int i = 0; i < a_nSubdivisions; i++)
 	{
 		AddTri(vector3(0.0f, 0.0f, 0.0f),
@@ -103,19 +108,24 @@ void MyMesh::GenerateCylinder(float a_fRadius, float a_fHeight, int a_nSubdivisi
 	Init();
 
 	// Replace this with your code
+	//Create List of Verticies
 	std::vector<vector3> verticies;
+	//Grab Angle
 	float angle = PI * 2.0 / a_nSubdivisions;
+	//Fill List of Verticies
 	for (int i = 0; i < a_nSubdivisions; i++)
 	{
 		vector3 vertex = vector3(glm::cos(angle * i) * a_fRadius, 0.0f, glm::sin(angle * i) * a_fRadius);
 		verticies.push_back(vertex);
 	}
+	//Create Bottom Circle of Cylinder
 	for (int i = 0; i < a_nSubdivisions; i++)
 	{
 		AddTri(vector3(0.0f, 0.0f, 0.0f),
 			verticies[i],
 			verticies[(i + 1) % a_nSubdivisions]);
 	}
+	//Create Outer Squares of Cylinder
 	for (int i = 0; i < a_nSubdivisions; i++)
 	{
 		AddQuad(verticies[(i + 1) % a_nSubdivisions],
@@ -123,6 +133,7 @@ void MyMesh::GenerateCylinder(float a_fRadius, float a_fHeight, int a_nSubdivisi
 			verticies[(i + 1) % a_nSubdivisions] + vector3(0.0f, a_fHeight, 0.0f),
 			verticies[i] + vector3(0.0f, a_fHeight, 0.0f));
 	}
+	//Create Top Circle of Cylinder
 	for (int i = 0; i < a_nSubdivisions; i++)
 	{
 		AddTri(vector3(0.0f, a_fHeight, 0.0f),
@@ -158,9 +169,13 @@ void MyMesh::GenerateTube(float a_fOuterRadius, float a_fInnerRadius, float a_fH
 	Init();
 
 	// Replace this with your code
+	//Create List of Outer Verticies
 	std::vector<vector3> outerVerticies;
+	//Create List of Inner Verticies
 	std::vector<vector3> innerVerticies;
+	//Grab Angle
 	float angle = PI * 2.0 / a_nSubdivisions;
+	//Fill List of Outer and Inner Verticies
 	for (int i = 0; i < a_nSubdivisions; i++)
 	{
 		vector3 outerVertex = vector3(glm::cos(angle * i) * a_fOuterRadius, 0.0f, glm::sin(angle * i) * a_fOuterRadius);
@@ -168,12 +183,15 @@ void MyMesh::GenerateTube(float a_fOuterRadius, float a_fInnerRadius, float a_fH
 		outerVerticies.push_back(outerVertex);
 		innerVerticies.push_back(innerVertex);
 	}
+	//Create Bottom Hole of Tube
 	for (int i = 0; i < a_nSubdivisions; i++)
 	{
-		AddTri(vector3(0.0f, 0.0f, 0.0f),
+		AddQuad(vector3(innerVerticies[i].x, 0.0f, innerVerticies[i].z),
 			outerVerticies[i],
+			innerVerticies[(i + 1) % a_nSubdivisions],
 			outerVerticies[(i + 1) % a_nSubdivisions]);
 	}
+	//Create Outer Squares of Tube
 	for (int i = 0; i < a_nSubdivisions; i++)
 	{
 		AddQuad(outerVerticies[(i + 1) % a_nSubdivisions],
@@ -181,11 +199,21 @@ void MyMesh::GenerateTube(float a_fOuterRadius, float a_fInnerRadius, float a_fH
 			outerVerticies[(i + 1) % a_nSubdivisions] + vector3(0.0f, a_fHeight, 0.0f),
 			outerVerticies[i] + vector3(0.0f, a_fHeight, 0.0f));
 	}
+	//Create Inner Squares of Tube
 	for (int i = 0; i < a_nSubdivisions; i++)
 	{
-		AddTri(vector3(0.0f, a_fHeight, 0.0f),
-			outerVerticies[(i + 1) % a_nSubdivisions] + vector3(0.0f, a_fHeight, 0.0f),
-			outerVerticies[i] + vector3(0.0f, a_fHeight, 0.0f));
+		AddQuad(innerVerticies[(i + 1) % a_nSubdivisions] + vector3(0.0f, a_fHeight, 0.0f),
+			innerVerticies[i] + vector3(0.0f, a_fHeight, 0.0f),
+			innerVerticies[(i + 1) % a_nSubdivisions],
+			innerVerticies[i]);
+	}
+	//Create Top Hole of Tube
+	for (int i = 0; i < a_nSubdivisions; i++)
+	{
+		AddQuad(outerVerticies[(i + 1) % a_nSubdivisions] + vector3(0.0f, a_fHeight, 0.0f),
+			outerVerticies[i] + vector3(0.0f, a_fHeight, 0.0f),
+			innerVerticies[(i + 1) % a_nSubdivisions] + vector3(0.0f, a_fHeight, 0.0f),
+			vector3(innerVerticies[i].x, a_fHeight, innerVerticies[i].z));
 	}
 	// -------------------------------
 
@@ -218,7 +246,19 @@ void MyMesh::GenerateTorus(float a_fOuterRadius, float a_fInnerRadius, int a_nSu
 	Init();
 
 	// Replace this with your code
-	GenerateCube(a_fOuterRadius * 2.0f, a_v3Color);
+	//Create List of Outer Verticies
+	std::vector<vector3> outerVerticies;
+	//Create List of Inner Verticies
+	std::vector<vector3> innerVerticies;
+	//Grab Angle of Circles used in Torus
+	float circleAngle = PI * 2.0 / a_nSubdivisionsA;
+	//Grab Angle of Squares used around Torus
+	float quadAngle = PI * 2.0 / a_nSubdivisionsB;
+	//Fill List of Outer Verticies
+	for (int i = 0; i < a_nSubdivisionsA; i++)
+	{
+		vector3 vertex = vector3(glm::cos(circleAngle * i) * a_fOuterRadius, 0.0f, glm::sin(circleAngle * i) * a_fOuterRadius);
+	}
 	// -------------------------------
 
 	// Adding information about color
