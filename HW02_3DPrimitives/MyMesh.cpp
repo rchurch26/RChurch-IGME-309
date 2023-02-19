@@ -246,19 +246,87 @@ void MyMesh::GenerateTorus(float a_fOuterRadius, float a_fInnerRadius, int a_nSu
 	Init();
 
 	// Replace this with your code
+	//Create List of Verticies
+	std::vector<vector3> innerVerticies;
 	//Create List of Outer Verticies
 	std::vector<vector3> outerVerticies;
-	//Create List of Inner Verticies
-	std::vector<vector3> innerVerticies;
-	//Grab Angle of Circles used in Torus
-	float circleAngle = PI * 2.0 / a_nSubdivisionsA;
-	//Grab Angle of Squares used around Torus
-	float quadAngle = PI * 2.0 / a_nSubdivisionsB;
-	//Fill List of Outer Verticies
-	for (int i = 0; i < a_nSubdivisionsA; i++)
+
+	//Grab Angle of Torus
+	float angle = PI * 2.0f / a_nSubdivisionsA;
+
+	//Fill List of Inner Verticies
+	for (int i = 0; i < a_nSubdivisionsB; i++)
 	{
-		vector3 vertex = vector3(glm::cos(circleAngle * i) * a_fOuterRadius, 0.0f, glm::sin(circleAngle * i) * a_fOuterRadius);
+		vector3 vertex = vector3(glm::cos(angle * i) * a_fInnerRadius, glm::sin(angle * i) * a_fInnerRadius, 0.0f);
+		innerVerticies.push_back(vertex);
 	}
+	//Fill List of Outer Verticies
+	for (int i = 0; i < a_nSubdivisionsB; i++)
+	{
+		vector3 vertex = vector3(glm::cos(angle * i) * a_fInnerRadius, glm::sin(angle * i) * a_fInnerRadius, 0.0f);
+		outerVerticies.push_back(vertex);
+	}
+
+	//Create Circles Around Ring
+	for (int i = 0; i < a_nSubdivisionsB; i++)
+	{
+		//Create List of Circle Verticies
+		std::vector<vector3> circleVerticies = innerVerticies;
+	
+		//Create Transform Matrix
+		matrix4 m4Transform;
+		//Rotate and Translate Matrix
+		m4Transform = glm::rotate(IDENTITY_M4, angle * i, AXIS_Y);
+		m4Transform = glm::translate(m4Transform, vector3(a_fOuterRadius, 0.0f, 0.0f));
+	
+		//Transform Each Vertex
+		for (int i = 0; i < a_nSubdivisionsB; i++)
+		{
+			circleVerticies[i] = m4Transform * vector4(circleVerticies[i], 1.0f);
+		}
+	
+		//Set Center of Circles
+		vector3 center = ZERO_V3;
+		center = m4Transform * vector4(center, 1.0f);
+		//Create Circles
+		for (int i = 0; i < a_nSubdivisionsA; i++)
+		{
+			AddTri(center,
+				circleVerticies[i],
+				circleVerticies[(i + 1) % a_nSubdivisionsB]);
+		}
+	}
+
+	//Create Quads Around Ring
+	//for (int i = 0; i < a_nSubdivisionsB; i++)
+	//{
+	//	//Create List of Quad Verticies
+	//	std::vector<vector3> quadVerticies = outerVerticies;
+	//
+	//	//Create Transform Matrix
+	//	matrix4 m4Transform;
+	//	//Rotate and Translate Matrix
+	//	m4Transform = glm::rotate(IDENTITY_M4, angle * i, AXIS_Y);
+	//	m4Transform = glm::translate(m4Transform, vector3(a_fOuterRadius, 0.0f, 0.0f));
+	//
+	//	//Transform Each Vertex
+	//	for (int i = 0; i < a_nSubdivisionsB; i++)
+	//	{
+	//		quadVerticies[i] = m4Transform * vector4(quadVerticies[i], 1.0f);
+	//	}
+	//
+	//	//Set Center of Quads
+	//	vector3 center = ZERO_V3;
+	//	center = m4Transform * vector4(center, 1.0f);
+	//	//Create Quads
+	//	for (int i = 0; i < a_nSubdivisionsA; i++)
+	//	{
+	//		AddQuad(quadVerticies[(i + 1) % a_nSubdivisionsA],
+	//			quadVerticies[i],
+	//			quadVerticies[i] + vector3(0.0f, 0.0f, a_nSubdivisionsA),
+	//			quadVerticies[(i + 1) % a_nSubdivisionsA] + vector3(0.0f, 0.0f, a_nSubdivisionsA));
+	//	}
+	//}
 	// -------------------------------
 
 	// Adding information about color
@@ -283,7 +351,54 @@ void MyMesh::GenerateSphere(float a_fRadius, int a_nSubdivisions, vector3 a_v3Co
 	Init();
 
 	// Replace this with your code
-	GenerateCube(a_fRadius * 2.0f, a_v3Color);
+	//Create List of Verticies
+	std::vector<vector3> verticies;
+
+	//Grab Angle of Sphere
+	float angle = PI * 2.0f / a_nSubdivisions;
+
+	//Fill List of Verticies
+	for (int i = 0; i < a_nSubdivisions; i++)
+	{
+		vector3 vertex = vector3(glm::cos(angle * i) * a_fRadius, glm::sin(angle * i) * a_fRadius, 0.0f);
+		verticies.push_back(vertex);
+	}
+
+	//Create Circles of Sphere
+	for (int i = 0; i < a_nSubdivisions; i++)
+	{
+		//Create List of New Verticies
+		std::vector<vector3> newVerticies = verticies;
+
+		//Create Transform Matrix
+		matrix4 m4Transform;
+		//Rotate Matrix
+		m4Transform = glm::rotate(IDENTITY_M4, angle * i, AXIS_Y);
+
+		//Transform Each Vertex
+		for (int i = 0; i < a_nSubdivisions; i++)
+		{
+			newVerticies[i] = m4Transform * vector4(newVerticies[i], 1.0f);
+		}
+
+		//Set Center of Verticies
+		vector3 center = ZERO_V3;
+		center = m4Transform * vector4(center, 1.0f);
+		//Create Verticies
+		for (int i = 0; i < a_nSubdivisions; i++)
+		{
+			AddTri(center,
+				newVerticies[i],
+				newVerticies[(i + 1) % a_nSubdivisions]);
+		}
+		for (int i = 0; i < a_nSubdivisions; i++)
+		{
+			AddQuad(newVerticies[i],
+				newVerticies[(i + 1) % a_nSubdivisions],
+				newVerticies[(i + 2) % a_nSubdivisions],
+				center);
+		}
+	}
 	// -------------------------------
 
 	// Adding information about color
