@@ -247,31 +247,23 @@ void MyMesh::GenerateTorus(float a_fOuterRadius, float a_fInnerRadius, int a_nSu
 
 	// Replace this with your code
 	//Create List of Verticies
-	std::vector<vector3> innerVerticies;
-	//Create List of Outer Verticies
-	std::vector<vector3> outerVerticies;
+	std::vector<vector3> verticies;
 
 	//Grab Angle of Torus
 	float angle = PI * 2.0f / a_nSubdivisionsA;
 
-	//Fill List of Inner Verticies
+	//Fill List of Verticies
 	for (int i = 0; i < a_nSubdivisionsB; i++)
 	{
 		vector3 vertex = vector3(glm::cos(angle * i) * a_fInnerRadius, glm::sin(angle * i) * a_fInnerRadius, 0.0f);
-		innerVerticies.push_back(vertex);
-	}
-	//Fill List of Outer Verticies
-	for (int i = 0; i < a_nSubdivisionsB; i++)
-	{
-		vector3 vertex = vector3(glm::cos(angle * i) * a_fInnerRadius, glm::sin(angle * i) * a_fInnerRadius, 0.0f);
-		outerVerticies.push_back(vertex);
+		verticies.push_back(vertex);
 	}
 
 	//Create Circles Around Ring
 	for (int i = 0; i < a_nSubdivisionsB; i++)
 	{
 		//Create List of Circle Verticies
-		std::vector<vector3> circleVerticies = innerVerticies;
+		std::vector<vector3> circleVerticies = verticies;
 	
 		//Create Transform Matrix
 		matrix4 m4Transform;
@@ -295,38 +287,15 @@ void MyMesh::GenerateTorus(float a_fOuterRadius, float a_fInnerRadius, int a_nSu
 				circleVerticies[i],
 				circleVerticies[(i + 1) % a_nSubdivisionsB]);
 		}
+		//Create Quads
+		for (int i = 0; i < a_nSubdivisionsA; i++)
+		{
+			AddQuad(verticies[i],
+				verticies[(i + 1) % a_nSubdivisionsB],
+				verticies[i] + circleVerticies[i],
+				circleVerticies[(i + 1) % a_nSubdivisionsB] + circleVerticies[(i + 1) % a_nSubdivisionsB]);
+		}
 	}
-
-	//Create Quads Around Ring
-	//for (int i = 0; i < a_nSubdivisionsB; i++)
-	//{
-	//	//Create List of Quad Verticies
-	//	std::vector<vector3> quadVerticies = outerVerticies;
-	//
-	//	//Create Transform Matrix
-	//	matrix4 m4Transform;
-	//	//Rotate and Translate Matrix
-	//	m4Transform = glm::rotate(IDENTITY_M4, angle * i, AXIS_Y);
-	//	m4Transform = glm::translate(m4Transform, vector3(a_fOuterRadius, 0.0f, 0.0f));
-	//
-	//	//Transform Each Vertex
-	//	for (int i = 0; i < a_nSubdivisionsB; i++)
-	//	{
-	//		quadVerticies[i] = m4Transform * vector4(quadVerticies[i], 1.0f);
-	//	}
-	//
-	//	//Set Center of Quads
-	//	vector3 center = ZERO_V3;
-	//	center = m4Transform * vector4(center, 1.0f);
-	//	//Create Quads
-	//	for (int i = 0; i < a_nSubdivisionsA; i++)
-	//	{
-	//		AddQuad(quadVerticies[(i + 1) % a_nSubdivisionsA],
-	//			quadVerticies[i],
-	//			quadVerticies[i] + vector3(0.0f, 0.0f, a_nSubdivisionsA),
-	//			quadVerticies[(i + 1) % a_nSubdivisionsA] + vector3(0.0f, 0.0f, a_nSubdivisionsA));
-	//	}
-	//}
 	// -------------------------------
 
 	// Adding information about color
