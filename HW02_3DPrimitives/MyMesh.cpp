@@ -259,8 +259,6 @@ void MyMesh::GenerateTorus(float a_fOuterRadius, float a_fInnerRadius, int a_nSu
 		verticies.push_back(vertex);
 	}
 
-	//Create List of Quad Verticies
-	std::vector<vector3> quadVerticies;
 	//Create Circles Around Ring
 	for (int i = 0; i < a_nSubdivisionsB; i++)
 	{
@@ -277,7 +275,7 @@ void MyMesh::GenerateTorus(float a_fOuterRadius, float a_fInnerRadius, int a_nSu
 		for (int j = 0; j < a_nSubdivisionsB; j++)
 		{
 			circleVerticies[j] = m4Transform * vector4(circleVerticies[j], 1.0f);
-			quadVerticies.push_back(circleVerticies[j]);
+			verticies.push_back(circleVerticies[j]);
 		}
 	
 		//Set Center of Circles
@@ -285,12 +283,12 @@ void MyMesh::GenerateTorus(float a_fOuterRadius, float a_fInnerRadius, int a_nSu
 		center = m4Transform * vector4(center, 1.0f);
 	}
 	//Create Torus
-	for (int j = 0; j < a_nSubdivisionsA; j++)
+	for (int z = 0; z < a_nSubdivisionsA; z++)
 	{
-		AddQuad(quadVerticies[j],
-			quadVerticies[(j + 1) % a_nSubdivisionsB],
-			quadVerticies[(j + 1 + a_nSubdivisionsB) % a_nSubdivisionsB],
-			quadVerticies[(j + a_nSubdivisionsB) % a_nSubdivisionsB]);
+		AddQuad(verticies[(z + a_nSubdivisionsB) % a_nSubdivisionsB],
+			verticies[(z + a_nSubdivisionsB)],
+			verticies[z + 1 + a_nSubdivisionsB],
+			verticies[(z + 1)]);
 	}
 	// -------------------------------
 
