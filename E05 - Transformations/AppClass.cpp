@@ -38,8 +38,11 @@ void Application::Display(void)
 	//Calculate the model, view and projection matrix
 	matrix4 m4Projection = m_pCameraMngr->GetProjectionMatrix();
 	matrix4 m4View = m_pCameraMngr->GetViewMatrix();
-
+	static float displacement = 0.0f;
+	matrix4 m4Model = glm::translate(vector3(displacement, 0.0f, 0.0f));
 	m_pMesh->Render(m4Projection, m4View, ToMatrix4(m_qArcBall));
+	m_pMesh->Render(m4Projection, m4View, m4Model);
+	displacement += 0.01f;
 
 	// draw a skybox
 	m_pModelMngr->AddSkyboxToRenderList();
