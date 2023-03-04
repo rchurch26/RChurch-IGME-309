@@ -285,10 +285,10 @@ void MyMesh::GenerateTorus(float a_fOuterRadius, float a_fInnerRadius, int a_nSu
 	//Create Torus
 	for (int z = 0; z < a_nSubdivisionsA; z++)
 	{
-		AddQuad(verticies[(z + a_nSubdivisionsB) % a_nSubdivisionsB],
-			verticies[(z + a_nSubdivisionsB)],
-			verticies[z + 1 + a_nSubdivisionsB],
-			verticies[(z + 1)]);
+		AddQuad(verticies[(z + 1) % a_nSubdivisionsB],
+			verticies[z],
+			verticies[(z + 1 + a_nSubdivisionsA) % a_nSubdivisionsB],
+			verticies[(z + a_nSubdivisionsA)]);
 	}
 	// -------------------------------
 
