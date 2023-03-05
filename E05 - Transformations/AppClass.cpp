@@ -43,54 +43,54 @@ void Application::Display(void)
 	matrix4 m4Projection = m_pCameraMngr->GetProjectionMatrix();
 	matrix4 m4View = m_pCameraMngr->GetViewMatrix();
 	//Create Top Antennas
-	m_pMesh->Render(m4Projection, m4View, glm::translate(vector3(-3.0f, 3.75f, 0.0f)));
-	m_pMesh->Render(m4Projection, m4View, glm::translate(vector3(3.0f, 3.75f, 0.0f)));
+	meshes[0]->Render(m4Projection, m4View, glm::translate(vector3(-3.0f, 3.75f, 0.0f)));
+	meshes[0]->Render(m4Projection, m4View, glm::translate(vector3(3.0f, 3.75f, 0.0f)));
 	//Create Bottom Antennas
-	m_pMesh->Render(m4Projection, m4View, glm::translate(vector3(-2.0f, 2.75f, 0.0f)));
-	m_pMesh->Render(m4Projection, m4View, glm::translate(vector3(2.0f, 2.75f, 0.0f)));
+	meshes[0]->Render(m4Projection, m4View, glm::translate(vector3(-2.0f, 2.75f, 0.0f)));
+	meshes[0]->Render(m4Projection, m4View, glm::translate(vector3(2.0f, 2.75f, 0.0f)));
 	//Top of Head
 	for (uint i = 0; i < borderCount; i++)
 	{
-		m_pMesh->Render(m4Projection, m4View, glm::translate(vector3(-3.0f + i, 1.75f, 0.0f)));
+		meshes[0]->Render(m4Projection, m4View, glm::translate(vector3(-3.0f + i, 1.75f, 0.0f)));
 	}
 	//Second Row of Head
 	for (uint i = 0; i < secondRowBorderCount; i++)
 	{
-		m_pMesh->Render(m4Projection, m4View, glm::translate(vector3(-4.0f + i, 0.75f, 0.0f)));
+		meshes[0]->Render(m4Projection, m4View, glm::translate(vector3(-4.0f + i, 0.75f, 0.0f)));
 	}
 	for (uint i = 0; i < secondRowMidCount; i++)
 	{
-		m_pMesh->Render(m4Projection, m4View, glm::translate(vector3(-1.0f + i, 0.75f, 0.0f)));
+		meshes[0]->Render(m4Projection, m4View, glm::translate(vector3(-1.0f + i, 0.75f, 0.0f)));
 	}
 	for (uint i = 0; i < secondRowBorderCount; i++)
 	{
-		m_pMesh->Render(m4Projection, m4View, glm::translate(vector3(3.0f + i, 0.75f, 0.0f)));
+		meshes[0]->Render(m4Projection, m4View, glm::translate(vector3(3.0f + i, 0.75f, 0.0f)));
 	}
 	//Third Row of Head
 	for (uint i = 0; i < thirdRowCount; i++)
 	{
-		m_pMesh->Render(m4Projection, m4View, glm::translate(vector3(-5.0f + i, -0.25f, 0.0f)));
+		meshes[0]->Render(m4Projection, m4View, glm::translate(vector3(-5.0f + i, -0.25f, 0.0f)));
 	}
 	//Fourth Row of Head
 	m_pMesh->Render(m4Projection, m4View, glm::translate(vector3(-5.0f, -1.25f, 0.0f)));
 	for (uint i = 0; i < borderCount; i++)
 	{
-		m_pMesh->Render(m4Projection, m4View, glm::translate(vector3(-3.0f + i, -1.25f, 0.0f)));
+		meshes[0]->Render(m4Projection, m4View, glm::translate(vector3(-3.0f + i, -1.25f, 0.0f)));
 	}
-	m_pMesh->Render(m4Projection, m4View, glm::translate(vector3(5.0f, -1.25f, 0.0f)));
+	meshes[0]->Render(m4Projection, m4View, glm::translate(vector3(5.0f, -1.25f, 0.0f)));
 	//Fifth Row of Head
-	m_pMesh->Render(m4Projection, m4View, glm::translate(vector3(-5.0f, -2.25f, 0.0f)));
-	m_pMesh->Render(m4Projection, m4View, glm::translate(vector3(-3.0f, -2.25f, 0.0f)));
-	m_pMesh->Render(m4Projection, m4View, glm::translate(vector3(3.0f, -2.25f, 0.0f)));
-	m_pMesh->Render(m4Projection, m4View, glm::translate(vector3(5.0f, -2.25f, 0.0f)));
+	meshes[0]->Render(m4Projection, m4View, glm::translate(vector3(-5.0f, -2.25f, 0.0f)));
+	meshes[0]->Render(m4Projection, m4View, glm::translate(vector3(-3.0f, -2.25f, 0.0f)));
+	meshes[0]->Render(m4Projection, m4View, glm::translate(vector3(3.0f, -2.25f, 0.0f)));
+	meshes[0]->Render(m4Projection, m4View, glm::translate(vector3(5.0f, -2.25f, 0.0f)));
 	//Mouth of Head
 	for (uint i = 0; i < mouthBorderCount; i++)
 	{
-		m_pMesh->Render(m4Projection, m4View, glm::translate(vector3(-2.0f + i, -3.25f, 0.0f)));
+		meshes[0]->Render(m4Projection, m4View, glm::translate(vector3(-2.0f + i, -3.25f, 0.0f)));
 	}
 	for (uint i = 0; i < mouthBorderCount; i++)
 	{
-		m_pMesh->Render(m4Projection, m4View, glm::translate(vector3(1.0f + i, -3.25f, 0.0f)));
+		meshes[0]->Render(m4Projection, m4View, glm::translate(vector3(1.0f + i, -3.25f, 0.0f)));
 	}
 
 	// draw a skybox
