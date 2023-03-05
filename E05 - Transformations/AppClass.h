@@ -20,8 +20,15 @@ using namespace BTX;
 
 class Application
 {
-	uint m_uMeshCount = 10;
+	uint m_uMeshCount = 46;
 	MyMesh* m_pMesh;
+	std::vector<MyMesh*> meshes;
+	uint borderCount = 7;
+	uint secondRowBorderCount = 2;
+	uint secondRowMidCount = 3;
+	uint thirdRowCount = 11;
+	uint mouthBorderCount = 2;
+
 private:
 	String m_sProgrammer = "Alberto Bobadilla - labigm@rit.edu";
 	static ImGuiObject gui; //GUI object
