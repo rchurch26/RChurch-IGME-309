@@ -42,15 +42,11 @@ void Application::Display(void)
 	//Calculate the model, view and projection matrix
 	matrix4 m4Projection = m_pCameraMngr->GetProjectionMatrix();
 	matrix4 m4View = m_pCameraMngr->GetViewMatrix();
-	//Get Delta Time
-	float time = 0.0f;
-	uint clock = m_pSystem->GenClock();
-	time += m_pSystem->GetDeltaTime(clock);
 	//Handle Moving Meshes
 	uint j = 0;
-	float originalX = -5.0f;
+	static float originalX = -5.0f;
 	vector3 position(originalX, 0.0f, 0.0f);
-	position.x = originalX + time;
+	originalX = originalX + 0.1f;
 	matrix4 m4Position = glm::translate(position);
 	//Create Top Antennas
 	meshes[j]->Render(m4Projection, m4View, glm::translate(m4Position, vector3(-3.0f, 3.75f, 0.0f)));
