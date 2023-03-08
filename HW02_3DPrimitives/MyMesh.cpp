@@ -246,49 +246,46 @@ void MyMesh::GenerateTorus(float a_fOuterRadius, float a_fInnerRadius, int a_nSu
 	Init();
 
 	// Replace this with your code
-	//Create List of Verticies
-	std::vector<vector3> verticies;
+	//Store Circles
+	std::vector<std::vector<vector3>> circles;
 
 	//Grab Angle of Torus
-	float angle = PI * 2.0f / a_nSubdivisionsA;
+	float angle = PI * 2.0f / a_nSubdivisionsB;
 
-	//Fill List of Verticies
-	for (int i = 0; i < a_nSubdivisionsB; i++)
+	for (int j = 0; j < a_nSubdivisionsA; j++)
 	{
-		vector3 vertex = vector3(glm::cos(angle * i) * a_fInnerRadius, glm::sin(angle * i) * a_fInnerRadius, 0.0f);
-		verticies.push_back(vertex);
-	}
-
-	//Create Circles Around Ring
-	for (int i = 0; i < a_nSubdivisionsB; i++)
-	{
-		//Create List of Circle Verticies
-		std::vector<vector3> circleVerticies = verticies;
-	
-		//Create Circle Transform Matrix
-		matrix4 m4Transform;
-		//Rotate and Translate Matrix
-		m4Transform = glm::rotate(IDENTITY_M4, angle * i, AXIS_Y);
-		m4Transform = glm::translate(m4Transform, vector3(a_fOuterRadius, 0.0f, 0.0f));
-	
-		//Transform Each Vertex
-		for (int j = 0; j < a_nSubdivisionsB; j++)
+		//Create List of Verticies
+		std::vector<vector3> points;
+		//Set Transformation
+		matrix4 transform = glm::rotate(IDENTITY_M4, angle * j, AXIS_Y);
+		transform = transform * glm::translate(vector3(a_fOuterRadius, 0.0f, 0.0f));
+		//Fill List of Verticies
+		for (int i = 0; i < a_nSubdivisionsB; i++)
 		{
-			circleVerticies[j] = m4Transform * vector4(circleVerticies[j], 1.0f);
-			verticies.push_back(circleVerticies[j]);
+			vector3 vertex = vector3(glm::cos(angle * i) * a_fInnerRadius, glm::sin(angle * i) * a_fInnerRadius, 0.0f);
+			points.push_back(vertex);
 		}
-	
-		//Set Center of Circles
+		for (int i = 0; i < a_nSubdivisionsB; i++)
+		{
+			points[i] = transform * vector4(points[i], 1.0f);
+		}
+		//Set Center
 		vector3 center = ZERO_V3;
-		center = m4Transform * vector4(center, 1.0f);
+		center = transform * vector4(center, 1.0f);
+		circles.push_back(points);
 	}
 	//Create Torus
-	for (int z = 0; z < a_nSubdivisionsA; z++)
+	for (int x = 0; x < a_nSubdivisionsA; x++)
 	{
-		AddQuad(verticies[(z + 1) % a_nSubdivisionsB],
-			verticies[z],
-			verticies[(z + 1 + a_nSubdivisionsA) % a_nSubdivisionsB],
-			verticies[(z + a_nSubdivisionsA)]);
+		for (int y = 0; y < a_nSubdivisionsB; y++)
+		{
+			std::vector<vector3> first = circles[x];
+			std::vector<vector3> second = circles[(x + 1) % a_nSubdivisionsA];
+			AddQuad(first[y],
+				second[y],
+				first[(y + 1) % a_nSubdivisionsB],
+				second[(y + 1) % a_nSubdivisionsB]);
+		}
 	}
 	// -------------------------------
 
@@ -357,32 +354,6 @@ void MyMesh::GenerateSphere(float a_fRadius, int a_nSubdivisions, vector3 a_v3Co
 			AddTri(center,
 				newVerticies[i],
 				newVerticies[(i + 1) % a_nSubdivisions]);
-		}
-	}
-	//Create Sphere Connections
-	for (int i = 0; i < a_nSubdivisions; i++)
-	{
-		//Set List of Quad Verticies
-		quadVerticies = verticies;
-
-		//Create Quad Transform Matrix
-		matrix4 m4Transform;
-		//Rotate and Translate Matrix
-		m4Transform = glm::rotate(IDENTITY_M4, angle * i, AXIS_Y);
-
-		//Transform Each Vertex
-		for (int i = 0; i < a_nSubdivisions; i++)
-		{
-			quadVerticies[i] = m4Transform * vector4(quadVerticies[i], 1.0f);
-		}
-
-		//Create Quads
-		for (int i = 0; i < a_nSubdivisions; i++)
-		{
-			AddQuad(quadVerticies[i],
-				quadVerticies[(i + 1) % a_nSubdivisions],
-				quadVerticies[(i + 2) % a_nSubdivisions] * vector3(newVerticies[i].x * angle, newVerticies[i].y * angle, newVerticies[i].z * angle),
-				quadVerticies[(i + 3) % a_nSubdivisions] * vector3(newVerticies[i].x * angle, newVerticies[i].y * angle, newVerticies[i].z * angle));
 		}
 	}
 	// -------------------------------
