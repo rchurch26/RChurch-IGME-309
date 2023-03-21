@@ -311,50 +311,37 @@ void MyMesh::GenerateSphere(float a_fRadius, int a_nSubdivisions, vector3 a_v3Co
 	Init();
 
 	// Replace this with your code
-	//Create List of Verticies
-	std::vector<vector3> verticies;
-	//Create List of New Verticies
-	std::vector<vector3> newVerticies;
-	//Create List of Quad Verticies
-	std::vector<vector3> quadVerticies;
+	//Store Circles
+	std::vector<std::vector<vector3>> circles;
 
-	//Grab Angle of Sphere
+	//Grab Angle of Torus
 	float angle = PI * 2.0f / a_nSubdivisions;
 
-	//Fill List of Verticies
-	for (int i = 0; i < a_nSubdivisions; i++)
+	for (int j = 0; j < a_nSubdivisions; j++)
 	{
-		vector3 vertex = vector3(glm::cos(angle * i) * a_fRadius, glm::sin(angle * i) * a_fRadius, 0.0f);
-		verticies.push_back(vertex);
-	}
-
-	//Create Circles of Sphere
-	for (int i = 0; i < a_nSubdivisions; i++)
-	{
-		//Set List of New Verticies
-		newVerticies = verticies;
-
-		//Create Transform Matrix
-		matrix4 m4Transform;
-		//Rotate Matrix
-		m4Transform = glm::rotate(IDENTITY_M4, angle * i, AXIS_Y);
-
-		//Transform Each Vertex
+		//Create List of Verticies
+		std::vector<vector3> points;
+		//Set Transformation
+		matrix4 transform = glm::rotate(IDENTITY_M4, angle * j, AXIS_Y);
+		//Fill List of Verticies
 		for (int i = 0; i < a_nSubdivisions; i++)
 		{
-			newVerticies[i] = m4Transform * vector4(newVerticies[i], 1.0f);
+			vector3 vertex = vector3(glm::cos(angle * i) * a_fRadius, glm::sin(angle * i) * a_fRadius, 0.0f);
+			points.push_back(vertex);
 		}
-
-		//Set Center of Verticies
+		for (int i = 0; i < a_nSubdivisions; i++)
+		{
+			points[i] = transform * vector4(points[i], 1.0f);
+		}
+		//Set Center
 		vector3 center = ZERO_V3;
-		center = m4Transform * vector4(center, 1.0f);
-		//Create Verticies
-		for (int i = 0; i < a_nSubdivisions; i++)
-		{
-			AddTri(center,
-				newVerticies[i],
-				newVerticies[(i + 1) % a_nSubdivisions]);
-		}
+		center = transform * vector4(center, 1.0f);
+		circles.push_back(points);
+	}
+	//Create Verticies
+	for (int i = 0; i < a_nSubdivisions; i++)
+	{
+		
 	}
 	// -------------------------------
 

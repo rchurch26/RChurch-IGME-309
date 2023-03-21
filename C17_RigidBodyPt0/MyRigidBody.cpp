@@ -63,6 +63,49 @@ void MyRigidBody::Release(void)
 MyRigidBody::MyRigidBody(std::vector<vector3> a_pointList)
 {
 	Init();
+
+	//Create Rigid Bodies
+	uint count = a_pointList.size();
+	if (count < 1)
+		return;
+
+	//Find Center
+	m_v3Center = a_pointList[0];
+	//DO NOT DO
+	//for (uint i = 1; i < count; i++)
+	//{
+	//	m_v3Center += a_pointList[i];
+	//}
+	//m_v3Center = m_v3Center / count;
+
+	m_v3MaxL = m_v3MinL = a_pointList[0];
+	for (uint i = 1; i < count; i++)
+	{
+		if (m_v3MaxL.x < a_pointList[i].x)
+			m_v3MaxL.x = a_pointList[i].x;
+		if (m_v3MaxL.y < a_pointList[i].y)
+			m_v3MaxL.y = a_pointList[i].y;
+		if (m_v3MaxL.z < a_pointList[i].z)
+			m_v3MaxL.z = a_pointList[i].z;
+
+		if (m_v3MinL.x > a_pointList[i].x)
+			m_v3MinL.x = a_pointList[i].x;
+		if (m_v3MinL.y > a_pointList[i].y)
+			m_v3MinL.y = a_pointList[i].y;
+		if (m_v3MinL.z > a_pointList[i].z)
+			m_v3MinL.z = a_pointList[i].z;
+	}
+	m_v3Center = (m_v3MaxL + m_v3MinL) / 2.0f;
+
+	//Find Furthest Point from Center
+	for (uint i = 1; i < count; i++)
+	{
+		float distance = glm::distance(m_v3Center, a_pointList[i]);
+		if (distance > m_fRadius)
+			m_fRadius = distance;
+		//distance = std::max(m_fRadius, distance);//Another option
+	}
+	m_fRadius = glm::distance(m_v3Center, m_v3MaxL);
 }
 MyRigidBody::MyRigidBody(MyRigidBody const& other)
 {
@@ -102,6 +145,11 @@ void MyRigidBody::AddToRenderList(void)
 {
 	if (!m_bVisible)
 		return;
+
+	//Move, Scale, and Display Wire Sphere of Object
+	matrix4 m4Transform = glm::translate(IDENTITY_M4, m_v3Center);
+	m4Transform = m4Transform * glm::scale(IDENTITY_M4, vector3(m_fRadius));
+	m_pMeshMngr->AddWireSphereToRenderList(m4Transform, m_v3Color);
 }
 bool MyRigidBody::IsColliding(MyRigidBody* const other)
 {
