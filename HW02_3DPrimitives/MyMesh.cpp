@@ -341,7 +341,15 @@ void MyMesh::GenerateSphere(float a_fRadius, int a_nSubdivisions, vector3 a_v3Co
 	//Create Verticies
 	for (int i = 0; i < a_nSubdivisions; i++)
 	{
-		
+		for (int j = 0; j < a_nSubdivisions; j++)
+		{
+			std::vector<vector3> first = circles[i];
+			std::vector<vector3> second = circles[(i + 1) % a_nSubdivisions];
+			AddQuad(first[j],
+				first[(j + 1) % a_nSubdivisions],
+				first[(j + 2) % a_nSubdivisions],
+				first[(j + 3) % a_nSubdivisions]);
+		}
 	}
 	// -------------------------------
 
