@@ -49,9 +49,7 @@ void MyCamera::CalculateView(void)
 	quaternion yOrientation = quaternion();
 	yOrientation = yOrientation * glm::angleAxis(glm::radians(m_v3PitchYawRoll.y), AXIS_Y);
 	quaternion orientation = xOrientation * yOrientation;
-	//m_v3Rightward = m_v3Rightward + orientation.x;
-	//m_v3Upward = m_v3Upward + orientation.y;
-	//m_v3Forward = m_v3Forward + orientation.z;
+	//Apply orientation to directional vectors(Don't forget to reset PitchYawRoll)
 	m_m4View = glm::lookAt(m_v3Position, m_v3Target, m_v3Upward);
 }
 //You can assume that the code below does not need changes unless you expand the functionality

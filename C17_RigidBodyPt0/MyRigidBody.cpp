@@ -35,6 +35,10 @@ void MyRigidBody::Init(void)
 
 	m_m4ToWorld = IDENTITY_M4;
 }
+vector3 BTX::MyRigidBody::GlobalizeVector(vector3 a_input)
+{
+	return m_m4ToWorld * vector4(a_input, 1.0f);
+}
 void MyRigidBody::Swap(MyRigidBody& other)
 {
 	std::swap(m_pMeshMngr , other.m_pMeshMngr);
@@ -106,6 +110,7 @@ MyRigidBody::MyRigidBody(std::vector<vector3> a_pointList)
 		//distance = std::max(m_fRadius, distance);//Another option
 	}
 	m_fRadius = glm::distance(m_v3Center, m_v3MaxL);
+	m_v3HalfWidth = (m_v3MaxL - m_v3MinL) / 2.0f;
 }
 MyRigidBody::MyRigidBody(MyRigidBody const& other)
 {
@@ -147,11 +152,59 @@ void MyRigidBody::AddToRenderList(void)
 		return;
 
 	//Move, Scale, and Display Wire Sphere of Object
-	matrix4 m4Transform = glm::translate(IDENTITY_M4, m_v3Center);
+	matrix4 m4Transform = m_m4ToWorld;
+
+	//Sphere
+	m4Transform = m4Transform * glm::translate(IDENTITY_M4, m_v3Center);
 	m4Transform = m4Transform * glm::scale(IDENTITY_M4, vector3(m_fRadius));
 	m_pMeshMngr->AddWireSphereToRenderList(m4Transform, m_v3Color);
+	//Cube
+	m4Transform = m_m4ToWorld;
+	m4Transform = m4Transform * glm::translate(IDENTITY_M4, m_v3Center);
+	m4Transform = m4Transform * glm::scale(m_v3HalfWidth * 2.0f);
+	//m_pMeshMngr->AddWireCubeToRenderList(m4Transform, m_v3Color);
 }
 bool MyRigidBody::IsColliding(MyRigidBody* const other)
 {
-	return false;
+	//Circle Check
+	bool bColliding;
+	float fDistance = glm::distance(this->GlobalizeVector(this->m_v3Center), 
+		other->GlobalizeVector(other->m_v3Center));
+	bColliding = (this->m_fRadius + other->m_fRadius) > fDistance;
+
+	//Cube Check
+	//m_v3MinG = GlobalizeVector(m_v3MinL);
+	//m_v3MaxG = GlobalizeVector(m_v3MaxL);
+	//other->m_v3MinG = GlobalizeVector(m_v3MinL);
+	//other->m_v3MaxG = GlobalizeVector(m_v3MaxL);
+	//if (m_v3MinG.x > other->m_v3MaxG.x)
+	//{
+	//	bColliding = false;
+	//}
+	//if (m_v3MaxG.x < other->m_v3MinG.x)
+	//{
+	//	bColliding = false;
+	//}
+	//if (m_v3MinG.y > other->m_v3MaxG.y)
+	//{
+	//	bColliding = false;
+	//}
+	//if (m_v3MaxG.y < other->m_v3MinG.y)
+	//{
+	//	bColliding = false;
+	//}
+	//if (m_v3MinG.z > other->m_v3MaxG.z)
+	//{
+	//	bColliding = false;
+	//}
+	//if (m_v3MaxG.z < other->m_v3MinG.z)
+	//{
+	//	bColliding = false;
+	//}
+	if (bColliding)
+	{
+		this->m_v3Color = C_RED;
+		other->m_v3Color = C_RED;
+	}
+	return bColliding;
 }
