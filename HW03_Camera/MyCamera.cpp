@@ -5,12 +5,13 @@ void MyCamera::SetPositionTargetAndUpward(vector3 a_v3Position, vector3 a_v3Targ
 {
 	//TODO:: replace the super call with your functionality
 	//Tip: Changing any positional vector forces you to calculate new directional ones
-	super::SetPositionTargetAndUpward(a_v3Position, a_v3Target, a_v3Upward);
+	//a_v3Target = m_v3Rightward;
 
 	//After changing any vectors you need to recalculate the MyCamera View matrix.
 	//While this is executed within the parent call above, when you remove that line
 	//you will still need to call it at the end of this method
 	CalculateView();
+	super::SetPositionTargetAndUpward(a_v3Position, a_v3Target, a_v3Upward);
 }
 void MyCamera::MoveForward(float a_fDistance)
 {
@@ -49,7 +50,8 @@ void MyCamera::CalculateView(void)
 	quaternion yOrientation = quaternion();
 	yOrientation = yOrientation * glm::angleAxis(glm::radians(m_v3PitchYawRoll.y), AXIS_Y);
 	quaternion orientation = xOrientation * yOrientation;
-	//Apply orientation to directional vectors(Don't forget to reset PitchYawRoll)
+	//Apply orientation to directional vectors
+	m_v3Rightward = m_v3Rightward * orientation;
 	m_m4View = glm::lookAt(m_v3Position, m_v3Target, m_v3Upward);
 }
 //You can assume that the code below does not need changes unless you expand the functionality
