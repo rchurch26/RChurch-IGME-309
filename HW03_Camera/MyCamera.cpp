@@ -5,13 +5,15 @@ void MyCamera::SetPositionTargetAndUpward(vector3 a_v3Position, vector3 a_v3Targ
 {
 	//TODO:: replace the super call with your functionality
 	//Tip: Changing any positional vector forces you to calculate new directional ones
-	//a_v3Target = m_v3Rightward;
+	m_v3Position = a_v3Position;
+	m_v3Target = a_v3Target;
+	m_v3Upward = a_v3Upward;
 
 	//After changing any vectors you need to recalculate the MyCamera View matrix.
 	//While this is executed within the parent call above, when you remove that line
 	//you will still need to call it at the end of this method
 	CalculateView();
-	super::SetPositionTargetAndUpward(a_v3Position, a_v3Target, a_v3Upward);
+	//super::SetPositionTargetAndUpward(a_v3Position, a_v3Target, a_v3Upward);
 }
 void MyCamera::MoveForward(float a_fDistance)
 {
