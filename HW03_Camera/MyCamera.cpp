@@ -48,15 +48,16 @@ void MyCamera::CalculateView(void)
 	//		 have change so you only need to focus on the directional and positional 
 	//		 vectors. There is no need to calculate any right click process or connections.
 	//Create Quats
-	quaternion xOrientation = glm::angleAxis(m_v3PitchYawRoll.x, AXIS_X);
-	quaternion yOrientation = glm::angleAxis(m_v3PitchYawRoll.y, AXIS_Y);
+	quaternion xOrientation = glm::angleAxis(m_v3PitchYawRoll.x, m_v3Rightward);
+	quaternion yOrientation = glm::angleAxis(m_v3PitchYawRoll.y, m_v3Upward);
 	quaternion orientation = xOrientation * yOrientation;
 	//Apply orientation to directional vectors
-	m_v3Rightward = m_v3Rightward * orientation;
-	//m_v3Upward = m_v3Upward * yOrientation;
-	m_v3Forward = m_v3Forward * orientation;
+	m_v3Rightward = glm::rotate(orientation, m_v3Rightward);
+	m_v3Forward = glm::rotate(orientation, m_v3Forward);
 	m_v3Target = m_v3Position + m_v3Forward;
+	
 	m_m4View = glm::lookAt(m_v3Position, m_v3Target, m_v3Upward);
+
 	m_v3PitchYawRoll = ZERO_V3;
 }
 //You can assume that the code below does not need changes unless you expand the functionality
