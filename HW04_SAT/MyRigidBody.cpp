@@ -69,6 +69,16 @@ uint MyRigidBody::SAT(MyRigidBody* const a_pOther)
 	ro = a_pOther->m_v3HalfWidth[1] * absRot[0][2] + a_pOther->m_v3HalfWidth[2] * absRot[0][1];
 	if (abs(translate[2] * rot[1][0] - translate[1] * rot[2][0]) > rt + ro)
 		return 0;
+	//Test X Axis of This and Y Axis of Other
+	rt = this->m_v3HalfWidth[1] * absRot[2][1] + this->m_v3HalfWidth[2] * absRot[1][1];
+	ro = a_pOther->m_v3HalfWidth[0] * absRot[0][2] + a_pOther->m_v3HalfWidth[2] * absRot[0][0];
+	if (abs(translate[2] * rot[1][1] - translate[1] * rot[2][1]) > rt + ro)
+		return 0;
+	//Test X Axis of This and Z Axis of Other
+	rt = this->m_v3HalfWidth[1] * absRot[2][0] + this->m_v3HalfWidth[2] * absRot[1][0];
+	ro = a_pOther->m_v3HalfWidth[1] * absRot[0][2] + a_pOther->m_v3HalfWidth[2] * absRot[0][1];
+	if (abs(translate[2] * rot[1][0] - translate[1] * rot[2][0]) > rt + ro)
+		return 0;
 
 	//return BTXs::eSATResults::SAT_NONE;
 	return 1;
