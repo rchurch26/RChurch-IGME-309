@@ -34,7 +34,7 @@ uint MyRigidBody::SAT(MyRigidBody* const a_pOther)
 	}
 
 	//Create a translation vector that is calculated with this center and other center
-	vector3 translate = a_pOther->m_v3Center - this->m_v3Center;
+	vector3 translate = (a_pOther->m_m4ToWorld * vector4(a_pOther->m_v3Center, 1.0f)) - (this->m_m4ToWorld * vector4(this->m_v3Center, 1.0f));
 	//Move translation into this coordinate system
 	translate = vector3(glm::dot(translate, xVector), glm::dot(translate, yVector), glm::dot(translate, zVector));
 
@@ -64,6 +64,7 @@ uint MyRigidBody::SAT(MyRigidBody* const a_pOther)
 		if (abs(translate[0] * rot[0][i] + translate[1] * rot[1][i] + translate[2] * rot[2][i]) > rt + ro)
 			return 0;
 	}
+	//Test X
 	//Test X Axis of This and Other
 	rt = this->m_v3HalfWidth[1] * absRot[2][0] + this->m_v3HalfWidth[2] * absRot[1][0];
 	ro = a_pOther->m_v3HalfWidth[1] * absRot[0][2] + a_pOther->m_v3HalfWidth[2] * absRot[0][1];
@@ -78,6 +79,40 @@ uint MyRigidBody::SAT(MyRigidBody* const a_pOther)
 	rt = this->m_v3HalfWidth[1] * absRot[2][0] + this->m_v3HalfWidth[2] * absRot[1][0];
 	ro = a_pOther->m_v3HalfWidth[1] * absRot[0][2] + a_pOther->m_v3HalfWidth[2] * absRot[0][1];
 	if (abs(translate[2] * rot[1][0] - translate[1] * rot[2][0]) > rt + ro)
+		return 0;
+
+	//Test Y
+	//Test Y Axis of This and X Axis of Other
+	rt = this->m_v3HalfWidth[0] * absRot[2][0] + this->m_v3HalfWidth[2] * absRot[0][0];
+	ro = a_pOther->m_v3HalfWidth[1] * absRot[1][2] + a_pOther->m_v3HalfWidth[2] * absRot[1][1];
+	if (abs(translate[0] * rot[2][0] - translate[2] * rot[0][0]) > rt + ro)
+		return 0;
+	//Test Y Axis of This and Other
+	rt = this->m_v3HalfWidth[0] * absRot[2][1] + this->m_v3HalfWidth[2] * absRot[0][1];
+	ro = a_pOther->m_v3HalfWidth[0] * absRot[1][2] + a_pOther->m_v3HalfWidth[2] * absRot[1][0];
+	if (abs(translate[0] * rot[2][1] - translate[2] * rot[0][1]) > rt + ro)
+		return 0;
+	//Test Y Axis of This and Z Axis of Other
+	rt = this->m_v3HalfWidth[0] * absRot[2][2] + this->m_v3HalfWidth[2] * absRot[0][2];
+	ro = a_pOther->m_v3HalfWidth[0] * absRot[1][1] + a_pOther->m_v3HalfWidth[1] * absRot[1][0];
+	if (abs(translate[0] * rot[2][2] - translate[2] * rot[0][2]) > rt + ro)
+		return 0;
+
+	//Test Z
+	//Test Z Axis of This and X Axis of Other
+	rt = this->m_v3HalfWidth[0] * absRot[1][0] + this->m_v3HalfWidth[1] * absRot[0][0];
+	ro = a_pOther->m_v3HalfWidth[1] * absRot[2][2] + a_pOther->m_v3HalfWidth[2] * absRot[2][1];
+	if (abs(translate[1] * rot[0][0] - translate[0] * rot[1][0]) > rt + ro)
+		return 0;
+	//Test Z Axis of This and Y Axis of Other
+	rt = this->m_v3HalfWidth[0] * absRot[1][1] + this->m_v3HalfWidth[1] * absRot[0][1];
+	ro = a_pOther->m_v3HalfWidth[0] * absRot[2][2] + a_pOther->m_v3HalfWidth[2] * absRot[2][0];
+	if (abs(translate[1] * rot[0][1] - translate[0] * rot[1][1]) > rt + ro)
+		return 0;
+	//Test Z Axis of This and Other
+	rt = this->m_v3HalfWidth[0] * absRot[1][2] + this->m_v3HalfWidth[1] * absRot[0][2];
+	ro = a_pOther->m_v3HalfWidth[0] * absRot[2][1] + a_pOther->m_v3HalfWidth[1] * absRot[2][0];
+	if (abs(translate[1] * rot[0][2] - translate[0] * rot[1][2]) > rt + ro)
 		return 0;
 
 	//return BTXs::eSATResults::SAT_NONE;
@@ -95,6 +130,7 @@ bool MyRigidBody::IsColliding(MyRigidBody* const a_pOther)
 	if (bColliding) //they are colliding with bounding sphere
 	{
 		uint nResult = SAT(a_pOther);
+		bColliding = nResult;
 
 		if (bColliding) //The SAT shown they are colliding
 		{
