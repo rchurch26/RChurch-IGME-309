@@ -6,9 +6,72 @@ uint MyRigidBody::SAT(MyRigidBody* const a_pOther)
 	//TODO: Calculate the SAT algorithm I STRONGLY suggest you use the
 	//Real Time Collision detection algorithm for OBB here but feel free to
 	//implement your own solution.
-	
+	//Create a Vector3s for each part of this world matrix
+	vector3 xVector = this->m_m4ToWorld[0];
+	vector3 yVector = this->m_m4ToWorld[1];
+	vector3 zVector = this->m_m4ToWorld[2];
 
-	return BTXs::eSATResults::SAT_NONE;
+	//Create a Vector3s for each part of this world matrix
+	vector3 otherXVector = a_pOther->m_m4ToWorld[0];
+	vector3 otherYVector = a_pOther->m_m4ToWorld[1];
+	vector3 otherZVector = a_pOther->m_m4ToWorld[2];
+	
+	//Create rotation matrix and absolute rotation matrix
+	matrix3 rot;
+	matrix3 absRot;
+
+	//Create float for this rotation and other rotation
+	float rt;
+	float ro;
+	
+	//Compute rotation matrix by having other be expressed in this coordinate frame
+	for (uint i = 0; i < 3; i++)
+	{
+		for (uint j = 0; j < 3; j++)
+		{
+			rot[i][j] = glm::dot(this->m_m4ToWorld[i], a_pOther->m_m4ToWorld[j]);
+		}
+	}
+
+	//Create a translation vector that is calculated with this center and other center
+	vector3 translate = a_pOther->m_v3Center - this->m_v3Center;
+	//Move translation into this coordinate system
+	translate = vector3(glm::dot(translate, xVector), glm::dot(translate, yVector), glm::dot(translate, zVector));
+
+	//Grab Absolute Value of Rotations
+	for (uint i = 0; i < 3; i++)
+	{
+		for (uint j = 0; j < 3; j++)
+		{
+			absRot[i][j] = abs(rot[i][j]) + FLT_EPSILON;
+		}
+	}
+
+	//Perform SAT Tests
+	//Test Axes of This
+	for (uint i = 0; i < 3; i++)
+	{
+		rt = this->m_v3HalfWidth[i];
+		ro = a_pOther->m_v3HalfWidth[0] * absRot[i][0] + a_pOther->m_v3HalfWidth[1] * absRot[i][1] + a_pOther->m_v3HalfWidth[2] * absRot[i][2];
+		if (abs(translate[i]) > rt + ro)
+			return 0;
+	}
+	//Test Axes of Other
+	for (uint i = 0; i < 3; i++)
+	{
+		rt = this->m_v3HalfWidth[0] * absRot[0][i] + this->m_v3HalfWidth[1] * absRot[1][i] + this->m_v3HalfWidth[2] * absRot[2][i];
+		ro = a_pOther->m_v3HalfWidth[i];
+		if (abs(translate[0] * rot[0][i] + translate[1] * rot[1][i] + translate[2] * rot[2][i]) > rt + ro)
+			return 0;
+	}
+	//Test X Axis of This and Other
+	rt = this->m_v3HalfWidth[1] * absRot[2][0] + this->m_v3HalfWidth[2] * absRot[1][0];
+	ro = a_pOther->m_v3HalfWidth[1] * absRot[0][2] + a_pOther->m_v3HalfWidth[2] * absRot[0][1];
+	if (abs(translate[2] * rot[1][0] - translate[1] * rot[2][0]) > rt + ro)
+		return 0;
+
+	//return BTXs::eSATResults::SAT_NONE;
+	return 1;
 }
 bool MyRigidBody::IsColliding(MyRigidBody* const a_pOther)
 {
