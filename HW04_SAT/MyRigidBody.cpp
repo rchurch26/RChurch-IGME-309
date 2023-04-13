@@ -54,8 +54,8 @@ uint MyRigidBody::SAT(MyRigidBody* const a_pOther)
 		rt = this->m_v3HalfWidth[i];
 		ro = a_pOther->m_v3HalfWidth[0] * absRot[i][0] + a_pOther->m_v3HalfWidth[1] * absRot[i][1] + a_pOther->m_v3HalfWidth[2] * absRot[i][2];
 		if (abs(translate[i]) > rt + ro)
-			//return 1;
-			return 0;
+			return 1;
+			//return 0;
 	}
 	//Test Axes of Other
 	for (uint i = 0; i < 3; i++)
@@ -63,42 +63,42 @@ uint MyRigidBody::SAT(MyRigidBody* const a_pOther)
 		rt = this->m_v3HalfWidth[0] * absRot[0][i] + this->m_v3HalfWidth[1] * absRot[1][i] + this->m_v3HalfWidth[2] * absRot[2][i];
 		ro = a_pOther->m_v3HalfWidth[i];
 		if (abs(translate[0] * rot[0][i] + translate[1] * rot[1][i] + translate[2] * rot[2][i]) > rt + ro)
-			//return 1;
-			return 0;
+			return 1;
+			//return 0;
 	}
 	//Test X
 	//Test X Axis of This and Other
 	rt = this->m_v3HalfWidth[1] * absRot[2][0] + this->m_v3HalfWidth[2] * absRot[1][0];
 	ro = a_pOther->m_v3HalfWidth[1] * absRot[0][2] + a_pOther->m_v3HalfWidth[2] * absRot[0][1];
 	if (abs(translate[2] * rot[1][0] - translate[1] * rot[2][0]) > rt + ro)
-		//return BTXs::eSATResults::SAT_AXxBX;
-		return 0;
+		return BTXs::eSATResults::SAT_AXxBX;
+		//return 0;
 	//Test X Axis of This and Y Axis of Other
 	rt = this->m_v3HalfWidth[1] * absRot[2][1] + this->m_v3HalfWidth[2] * absRot[1][1];
 	ro = a_pOther->m_v3HalfWidth[0] * absRot[0][2] + a_pOther->m_v3HalfWidth[2] * absRot[0][0];
 	if (abs(translate[2] * rot[1][1] - translate[1] * rot[2][1]) > rt + ro)
-		//return BTXs::eSATResults::SAT_AXxBY;
-		return 0;
+		return BTXs::eSATResults::SAT_AXxBY;
+		//return 0;
 	//Test X Axis of This and Z Axis of Other
 	rt = this->m_v3HalfWidth[1] * absRot[2][0] + this->m_v3HalfWidth[2] * absRot[1][0];
 	ro = a_pOther->m_v3HalfWidth[1] * absRot[0][2] + a_pOther->m_v3HalfWidth[2] * absRot[0][1];
 	if (abs(translate[2] * rot[1][0] - translate[1] * rot[2][0]) > rt + ro)
-		//return BTXs::eSATResults::SAT_AXxBZ;
-		return 0;
+		return BTXs::eSATResults::SAT_AXxBZ;
+		//return 0;
 
 	//Test Y
 	//Test Y Axis of This and X Axis of Other
 	rt = this->m_v3HalfWidth[0] * absRot[2][0] + this->m_v3HalfWidth[2] * absRot[0][0];
 	ro = a_pOther->m_v3HalfWidth[1] * absRot[1][2] + a_pOther->m_v3HalfWidth[2] * absRot[1][1];
 	if (abs(translate[0] * rot[2][0] - translate[2] * rot[0][0]) > rt + ro)
-		//return BTXs::eSATResults::SAT_AYxBX;
-		return 0;
+		return BTXs::eSATResults::SAT_AYxBX;
+		//return 0;
 	//Test Y Axis of This and Other
 	rt = this->m_v3HalfWidth[0] * absRot[2][1] + this->m_v3HalfWidth[2] * absRot[0][1];
 	ro = a_pOther->m_v3HalfWidth[0] * absRot[1][2] + a_pOther->m_v3HalfWidth[2] * absRot[1][0];
 	if (abs(translate[0] * rot[2][1] - translate[2] * rot[0][1]) > rt + ro)
-		//return BTXs::eSATResults::SAT_AYxBY;
-		return 0;
+		return BTXs::eSATResults::SAT_AYxBY;
+		//return 0;
 	//Test Y Axis of This and Z Axis of Other
 	rt = this->m_v3HalfWidth[0] * absRot[2][2] + this->m_v3HalfWidth[2] * absRot[0][2];
 	ro = a_pOther->m_v3HalfWidth[0] * absRot[1][1] + a_pOther->m_v3HalfWidth[1] * absRot[1][0];
@@ -111,23 +111,23 @@ uint MyRigidBody::SAT(MyRigidBody* const a_pOther)
 	rt = this->m_v3HalfWidth[0] * absRot[1][0] + this->m_v3HalfWidth[1] * absRot[0][0];
 	ro = a_pOther->m_v3HalfWidth[1] * absRot[2][2] + a_pOther->m_v3HalfWidth[2] * absRot[2][1];
 	if (abs(translate[1] * rot[0][0] - translate[0] * rot[1][0]) > rt + ro)
-		//return BTXs::eSATResults::SAT_AZxBX;
-		return 0;
+		return BTXs::eSATResults::SAT_AZxBX;
+		//return 0;
 	//Test Z Axis of This and Y Axis of Other
 	rt = this->m_v3HalfWidth[0] * absRot[1][1] + this->m_v3HalfWidth[1] * absRot[0][1];
 	ro = a_pOther->m_v3HalfWidth[0] * absRot[2][2] + a_pOther->m_v3HalfWidth[2] * absRot[2][0];
 	if (abs(translate[1] * rot[0][1] - translate[0] * rot[1][1]) > rt + ro)
-		//return BTXs::eSATResults::SAT_AZxBY;
-		return 0;
+		return BTXs::eSATResults::SAT_AZxBY;
+		//return 0;
 	//Test Z Axis of This and Other
 	rt = this->m_v3HalfWidth[0] * absRot[1][2] + this->m_v3HalfWidth[1] * absRot[0][2];
 	ro = a_pOther->m_v3HalfWidth[0] * absRot[2][1] + a_pOther->m_v3HalfWidth[1] * absRot[2][0];
 	if (abs(translate[1] * rot[0][2] - translate[0] * rot[1][2]) > rt + ro)
-		//return BTXs::eSATResults::SAT_AZxBZ;
-		return 0;
+		return BTXs::eSATResults::SAT_AZxBZ;
+		//return 0;
 
-	//return BTXs::eSATResults::SAT_NONE;
-	return 1;
+	return BTXs::eSATResults::SAT_NONE;
+	//return 1;
 }
 bool MyRigidBody::IsColliding(MyRigidBody* const a_pOther)
 {
@@ -143,22 +143,26 @@ bool MyRigidBody::IsColliding(MyRigidBody* const a_pOther)
 		uint nResult = SAT(a_pOther);
 		bColliding = nResult;
 
-		if (bColliding) //The SAT shown they are colliding
+		if (!bColliding) //The SAT shown they are colliding
 		{
 			this->AddCollisionWith(a_pOther);
 			a_pOther->AddCollisionWith(this);
 		}
 		else //they are not colliding
 		{
-			//switch (nResult)
-			//{
-			//case BTXs::eSATResults::SAT_AX:
-			//	this->m_pModelMngr->AddPlaneToRenderList(this->m_m4ToWorld, C_BLUE);
-			//	break;
-			//case BTXs::eSATResults::SAT_AY:
-			//	this->m_pModelMngr->AddPlaneToRenderList(this->m_m4ToWorld, C_ORANGE);
-			//	break;
-			//}
+			switch (nResult)
+			{
+			case BTXs::eSATResults::SAT_AX:
+			case BTXs::eSATResults::SAT_BX:
+				m_pModelMngr->AddSphereToRenderList(m_m4ToWorld, C_CYAN);
+				//a_pOther->m_pModelMngr->AddSphereToRenderList(a_pOther->m_m4ToWorld, C_CYAN);
+				break;
+			case BTXs::eSATResults::SAT_AY:
+				this->m_pModelMngr->AddSphereToRenderList(this->m_m4ToWorld, C_PURPLE);
+				break;
+			case BTXs::eSATResults::SAT_AZ:
+				this->m_pModelMngr->AddSphereToRenderList(this->m_m4ToWorld, C_YELLOW);
+			}
 			this->RemoveCollisionWith(a_pOther);
 			a_pOther->RemoveCollisionWith(this);
 		}
