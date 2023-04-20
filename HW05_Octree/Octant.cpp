@@ -26,10 +26,46 @@ Octant::Octant(uint a_nMaxLevel, uint a_nIdealEntityCount)
 
 	//The following is a made-up size, you need to make sure it is measuring all the object boxes in the world
 	std::vector<vector3> lMinMax;
-	for (uint i = 0; i < a_nIdealEntityCount; i++)
-	{
 
+	//Find Max Point of Entities
+	vector3 maxPoint = m_pEntityMngr->GetRigidBody(0)->GetMaxLocal();
+	for (uint i = 1; i < m_pEntityMngr->GetEntityCount(); i++)
+	{
+		if (m_pEntityMngr->GetRigidBody(i)->GetMaxGlobal().x > maxPoint.x)
+		{
+			maxPoint.x = m_pEntityMngr->GetRigidBody(i)->GetMaxGlobal().x;
+		}
+		if (m_pEntityMngr->GetRigidBody(i)->GetMaxGlobal().y > maxPoint.y)
+		{
+			maxPoint.y = m_pEntityMngr->GetRigidBody(i)->GetMaxGlobal().y;
+		}
+		if (m_pEntityMngr->GetRigidBody(i)->GetMaxGlobal().z > maxPoint.z)
+		{
+			maxPoint.z = m_pEntityMngr->GetRigidBody(i)->GetMaxGlobal().z;
+		}
 	}
+
+	//Find Min Point of Entities
+	vector3 minPoint = m_pEntityMngr->GetRigidBody(0)->GetMinGlobal();
+	for (uint i = 1; i < m_pEntityMngr->GetEntityCount(); i++)
+	{
+		if (m_pEntityMngr->GetRigidBody(i)->GetMinGlobal().x < minPoint.x)
+		{
+			minPoint.x = m_pEntityMngr->GetRigidBody(i)->GetMinGlobal().x;
+		}
+		if (m_pEntityMngr->GetRigidBody(i)->GetMinGlobal().y < minPoint.y)
+		{
+			minPoint.y = m_pEntityMngr->GetRigidBody(i)->GetMinGlobal().y;
+		}
+		if (m_pEntityMngr->GetRigidBody(i)->GetMinGlobal().z < minPoint.z)
+		{
+			minPoint.z = m_pEntityMngr->GetRigidBody(i)->GetMinGlobal().z;
+		}
+	}
+
+	//Add Max and Min Points to lMinMax List
+	lMinMax.push_back(maxPoint);
+	lMinMax.push_back(minPoint);
 	RigidBody pRigidBody = RigidBody(lMinMax);
 
 
