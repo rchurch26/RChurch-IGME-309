@@ -86,6 +86,32 @@ bool Octant::IsColliding(uint a_uRBIndex)
 	//If the index given is larger than the number of elements in the bounding object there is no collision
 	//As the Octree will never rotate or scale this collision is as easy as an Axis Alligned Bounding Box
 	//Get all vectors in global space (the octant ones are already in Global)
+	if (m_v3Max.x < m_pEntityMngr[a_uRBIndex].GetRigidBody()->GetMinGlobal().x)
+	{
+		return false;
+	}
+	if (m_v3Min.x > m_pEntityMngr[a_uRBIndex].GetRigidBody()->GetMaxGlobal().x)
+	{
+		return false;
+	}
+
+	if (m_v3Max.y < m_pEntityMngr[a_uRBIndex].GetRigidBody()->GetMinGlobal().y)
+	{
+		return false;
+	}
+	if (m_v3Min.y > m_pEntityMngr[a_uRBIndex].GetRigidBody()->GetMaxGlobal().y)
+	{
+		return false;
+	}
+
+	if (m_v3Max.z < m_pEntityMngr[a_uRBIndex].GetRigidBody()->GetMinGlobal().z)
+	{
+		return false;
+	}
+	if (m_v3Min.z > m_pEntityMngr[a_uRBIndex].GetRigidBody()->GetMaxGlobal().z)
+	{
+		return false;
+	}
 	return true; // for the sake of startup code
 }
 void Octant::Display(uint a_nIndex, vector3 a_v3Color)
