@@ -25,6 +25,7 @@ void Application::InitVariables(void)
 			vector3 v3Position = vector3(glm::sphericalRand(34.0f));
 			matrix4 m4Position = glm::translate(v3Position);
 			m_pEntityMngr->SetModelMatrix(m4Position);
+			//m_pEntityMngr->UsePhysicsSolver();
 		}
 	}
 	m_uOctantLevels = 1;
