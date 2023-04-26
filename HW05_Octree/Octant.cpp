@@ -122,8 +122,18 @@ void Octant::Display(vector3 a_v3Color)
 {
 	//this is meant to be a recursive method, in starter code will only display the root
 	//even if other objects are created
-	m_pModelMngr->AddWireCubeToRenderList(glm::translate(IDENTITY_M4, m_v3Center) *
-		glm::scale(vector3(m_fSize)), a_v3Color);
+	if (m_uChildren == 0)
+	{
+		m_pModelMngr->AddWireCubeToRenderList(glm::translate(IDENTITY_M4, m_v3Center) *
+			glm::scale(vector3(m_fSize)), a_v3Color);
+	}
+	else
+	{
+		for (uint i = 0; i < m_uChildren; i++)
+		{
+			m_pChild[i]->Display(a_v3Color);
+		}
+	}
 }
 void Octant::Subdivide(void)
 {
@@ -137,7 +147,28 @@ void Octant::Subdivide(void)
 
 	//Subdivide the space and allocate 8 children
 	//Quad 1 Subdivison
-	vector3 q1Center = m_v3Center;
+	m_pChild[0] = new Octant(vector3(m_v3Center.x, m_v3Center.y, m_v3Center.z) + (m_fSize / 4), 
+		m_fSize / 2);
+	m_pChild[1] = new Octant(vector3(m_v3Center.x + (m_fSize / 4), m_v3Center.y + (m_fSize / 4), m_v3Center.z - (m_fSize / 4)), 
+		m_fSize / 2);
+	m_pChild[2] = new Octant(vector3(m_v3Center.x - (m_fSize / 4), m_v3Center.y + (m_fSize / 4), m_v3Center.z + (m_fSize / 4)), 
+		m_fSize / 2);
+	m_pChild[3] = new Octant(vector3(m_v3Center.x - (m_fSize / 4), m_v3Center.y + (m_fSize / 4), m_v3Center.z - (m_fSize / 4)), 
+		m_fSize / 2);
+
+	m_pChild[4] = new Octant(vector3(m_v3Center.x, m_v3Center.y, m_v3Center.z) - (m_fSize / 4),
+		m_fSize / 2);
+	m_pChild[5] = new Octant(vector3(m_v3Center.x + (m_fSize / 4), m_v3Center.y - (m_fSize / 4), m_v3Center.z - (m_fSize / 4)),
+		m_fSize / 2);
+	m_pChild[6] = new Octant(vector3(m_v3Center.x - (m_fSize / 4), m_v3Center.y - (m_fSize / 4), m_v3Center.z + (m_fSize / 4)),
+		m_fSize / 2);
+	m_pChild[7] = new Octant(vector3(m_v3Center.x + (m_fSize / 4), m_v3Center.y - (m_fSize / 4), m_v3Center.z + (m_fSize / 4)),
+		m_fSize / 2);
+	m_uChildren = 8;
+	for (uint i = 0; i < m_uLevel; i++)
+	{
+
+	}
 }
 bool Octant::ContainsAtLeast(uint a_nEntities)
 {

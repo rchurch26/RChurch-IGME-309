@@ -153,15 +153,11 @@ bool MyRigidBody::IsColliding(MyRigidBody* const a_pOther)
 			switch (nResult)
 			{
 			case BTXs::eSATResults::SAT_AX:
-			case BTXs::eSATResults::SAT_BX:
-				m_pModelMngr->AddSphereToRenderList(m_m4ToWorld, C_CYAN);
-				//a_pOther->m_pModelMngr->AddSphereToRenderList(a_pOther->m_m4ToWorld, C_CYAN);
 				break;
 			case BTXs::eSATResults::SAT_AY:
-				this->m_pModelMngr->AddSphereToRenderList(this->m_m4ToWorld, C_PURPLE);
 				break;
 			case BTXs::eSATResults::SAT_AZ:
-				this->m_pModelMngr->AddSphereToRenderList(this->m_m4ToWorld, C_YELLOW);
+				break;
 			}
 			this->RemoveCollisionWith(a_pOther);
 			a_pOther->RemoveCollisionWith(this);
