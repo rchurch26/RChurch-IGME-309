@@ -28,7 +28,7 @@ Octant::Octant(uint a_nMaxLevel, uint a_nIdealEntityCount)
 	std::vector<vector3> lMinMax;
 
 	//Find Max Point of Entities
-	vector3 maxPoint = m_pEntityMngr->GetRigidBody(0)->GetMaxLocal();
+	vector3 maxPoint = m_pEntityMngr->GetRigidBody(0)->GetMaxGlobal();
 	for (uint i = 1; i < m_pEntityMngr->GetEntityCount(); i++)
 	{
 		if (m_pEntityMngr->GetRigidBody(i)->GetMaxGlobal().x > maxPoint.x)
@@ -112,7 +112,7 @@ bool Octant::IsColliding(uint a_uRBIndex)
 	{
 		return false;
 	}
-	return true; // for the sake of startup code
+	return true;
 }
 void Octant::Display(uint a_nIndex, vector3 a_v3Color)
 {
@@ -122,6 +122,7 @@ void Octant::Display(vector3 a_v3Color)
 {
 	//this is meant to be a recursive method, in starter code will only display the root
 	//even if other objects are created
+	//Check if there children(if so call display again)
 	if (m_uChildren == 0)
 	{
 		m_pModelMngr->AddWireCubeToRenderList(glm::translate(IDENTITY_M4, m_v3Center) *
@@ -146,7 +147,7 @@ void Octant::Subdivide(void)
 		return;
 
 	//Subdivide the space and allocate 8 children
-	//Quad 1 Subdivison
+	//1st Subdivison
 	m_pChild[0] = new Octant(vector3(m_v3Center.x, m_v3Center.y, m_v3Center.z) + (m_fSize / 4), 
 		m_fSize / 2);
 	m_pChild[1] = new Octant(vector3(m_v3Center.x + (m_fSize / 4), m_v3Center.y + (m_fSize / 4), m_v3Center.z - (m_fSize / 4)), 
@@ -165,10 +166,20 @@ void Octant::Subdivide(void)
 	m_pChild[7] = new Octant(vector3(m_v3Center.x + (m_fSize / 4), m_v3Center.y - (m_fSize / 4), m_v3Center.z + (m_fSize / 4)),
 		m_fSize / 2);
 	m_uChildren = 8;
-	for (uint i = 0; i < m_uLevel; i++)
+	//Child Subdivisions
+	uint currLevel = 0;
+	for (uint i = 0; i < currLevel; i++)
 	{
-
+		if (m_pChild[i]->ContainsAtLeast(m_uIdealEntityCount))
+		{
+			m_pChild[i]->Subdivide();
+		}
 	}
+	for (uint j = 0; j < m_uChildren; j++)
+	{
+		currLevel += m_pChild[j]->m_uLevel + 1;
+	}
+	currLevel += m_uLevel + 1;
 }
 bool Octant::ContainsAtLeast(uint a_nEntities)
 {
