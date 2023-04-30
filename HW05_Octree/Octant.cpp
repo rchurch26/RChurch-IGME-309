@@ -148,38 +148,44 @@ void Octant::Subdivide(void)
 
 	//Subdivide the space and allocate 8 children
 	//1st Subdivison
+	m_uLevel++;
 	m_pChild[0] = new Octant(vector3(m_v3Center.x, m_v3Center.y, m_v3Center.z) + (m_fSize / 4), 
 		m_fSize / 2);
+	m_pChild[0]->m_uLevel = m_uLevel;
 	m_pChild[1] = new Octant(vector3(m_v3Center.x + (m_fSize / 4), m_v3Center.y + (m_fSize / 4), m_v3Center.z - (m_fSize / 4)), 
 		m_fSize / 2);
+	m_pChild[1]->m_uLevel = m_uLevel;
 	m_pChild[2] = new Octant(vector3(m_v3Center.x - (m_fSize / 4), m_v3Center.y + (m_fSize / 4), m_v3Center.z + (m_fSize / 4)), 
 		m_fSize / 2);
+	m_pChild[2]->m_uLevel = m_uLevel;
 	m_pChild[3] = new Octant(vector3(m_v3Center.x - (m_fSize / 4), m_v3Center.y + (m_fSize / 4), m_v3Center.z - (m_fSize / 4)), 
 		m_fSize / 2);
+	m_pChild[3]->m_uLevel = m_uLevel;
 
 	m_pChild[4] = new Octant(vector3(m_v3Center.x, m_v3Center.y, m_v3Center.z) - (m_fSize / 4),
 		m_fSize / 2);
+	m_pChild[4]->m_uLevel = m_uLevel;
 	m_pChild[5] = new Octant(vector3(m_v3Center.x + (m_fSize / 4), m_v3Center.y - (m_fSize / 4), m_v3Center.z - (m_fSize / 4)),
 		m_fSize / 2);
+	m_pChild[5]->m_uLevel = m_uLevel;
 	m_pChild[6] = new Octant(vector3(m_v3Center.x - (m_fSize / 4), m_v3Center.y - (m_fSize / 4), m_v3Center.z + (m_fSize / 4)),
 		m_fSize / 2);
+	m_pChild[6]->m_uLevel = m_uLevel;
 	m_pChild[7] = new Octant(vector3(m_v3Center.x + (m_fSize / 4), m_v3Center.y - (m_fSize / 4), m_v3Center.z + (m_fSize / 4)),
 		m_fSize / 2);
+	m_pChild[7]->m_uLevel = m_uLevel;
 	m_uChildren = 8;
 	//Child Subdivisions
-	uint currLevel = 0;
-	for (uint i = 0; i < currLevel; i++)
-	{
-		if (m_pChild[i]->ContainsAtLeast(m_uIdealEntityCount))
-		{
-			m_pChild[i]->Subdivide();
-		}
-	}
 	for (uint j = 0; j < m_uChildren; j++)
 	{
-		currLevel += m_pChild[j]->m_uLevel + 1;
+		for (uint i = 0; i < m_pChild[j]->m_uLevel; i++)
+		{
+			if (m_pChild[j]->ContainsAtLeast(m_uIdealEntityCount))
+			{
+				m_pChild[j]->Subdivide();
+			}
+		}
 	}
-	currLevel += m_uLevel + 1;
 }
 bool Octant::ContainsAtLeast(uint a_nEntities)
 {
