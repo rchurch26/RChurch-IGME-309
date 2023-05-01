@@ -117,6 +117,18 @@ bool Octant::IsColliding(uint a_uRBIndex)
 void Octant::Display(uint a_nIndex, vector3 a_v3Color)
 {
 	// Display the specified octant
+	if (m_uID == a_nIndex)
+	{
+		m_pModelMngr->AddWireCubeToRenderList(glm::translate(IDENTITY_M4, m_v3Center) *
+			glm::scale(vector3(m_fSize)), a_v3Color);
+	}
+	else
+	{
+		for (uint i = 0; i < m_uChildren; i++)
+		{
+			m_pChild[i]->Display(a_nIndex, a_v3Color);
+		}
+	}
 }
 void Octant::Display(vector3 a_v3Color)
 {
@@ -209,7 +221,97 @@ void Octant::AssignIDtoEntity(void)
 	//Recursive method
 	//Have to traverse the tree and make sure to tell the entity manager
 	//what octant (space) each object is at
-	m_pEntityMngr->AddDimension(0, m_uID);//example only, take the first entity and tell it its on this space
+	if (m_uLevel > 0)
+	{
+		for (uint i = 0; i < m_pChild[0]->m_pEntityMngr->GetEntityCount(); i++)
+		{
+			if (m_pChild[0]->IsColliding(i))
+			{
+				if (m_pChild[0]->m_uChildren == 0)
+				{
+					m_pChild[0]->m_pEntityMngr->AddDimension(i, m_pChild[0]->m_uID);
+				}
+			}
+		}
+		for (uint i = 0; i < m_pChild[1]->m_pEntityMngr->GetEntityCount(); i++)
+		{
+			if (m_pChild[1]->IsColliding(i))
+			{
+				if (m_pChild[1]->m_uChildren == 0)
+				{
+					m_pChild[1]->m_pEntityMngr->AddDimension(i, m_pChild[1]->m_uID);
+				}
+			}
+		}
+		for (uint i = 0; i < m_pChild[2]->m_pEntityMngr->GetEntityCount(); i++)
+		{
+			if (m_pChild[2]->IsColliding(i))
+			{
+				if (m_pChild[2]->m_uChildren == 0)
+				{
+					m_pChild[2]->m_pEntityMngr->AddDimension(i, m_pChild[2]->m_uID);
+				}
+			}
+		}
+		for (uint i = 0; i < m_pChild[3]->m_pEntityMngr->GetEntityCount(); i++)
+		{
+			if (m_pChild[3]->IsColliding(i))
+			{
+				if (m_pChild[3]->m_uChildren == 0)
+				{
+					m_pChild[3]->m_pEntityMngr->AddDimension(i, m_pChild[3]->m_uID);
+				}
+			}
+		}
+
+		for (uint i = 0; i < m_pChild[4]->m_pEntityMngr->GetEntityCount(); i++)
+		{
+			if (m_pChild[4]->IsColliding(i))
+			{
+				if (m_pChild[4]->m_uChildren == 0)
+				{
+					m_pChild[4]->m_pEntityMngr->AddDimension(i, m_pChild[4]->m_uID);
+				}
+			}
+		}
+		for (uint i = 0; i < m_pChild[5]->m_pEntityMngr->GetEntityCount(); i++)
+		{
+			if (m_pChild[5]->IsColliding(i))
+			{
+				if (m_pChild[5]->m_uChildren == 0)
+				{
+					m_pChild[5]->m_pEntityMngr->AddDimension(i, m_pChild[5]->m_uID);
+				}
+			}
+		}
+		for (uint i = 0; i < m_pChild[6]->m_pEntityMngr->GetEntityCount(); i++)
+		{
+			if (m_pChild[6]->IsColliding(i))
+			{
+				if (m_pChild[6]->m_uChildren == 0)
+				{
+					m_pChild[6]->m_pEntityMngr->AddDimension(i, m_pChild[6]->m_uID);
+				}
+			}
+		}
+		for (uint i = 0; i < m_pChild[7]->m_pEntityMngr->GetEntityCount(); i++)
+		{
+			if (m_pChild[7]->IsColliding(i))
+			{
+				if (m_pChild[7]->m_uChildren == 0)
+				{
+					m_pChild[7]->m_pEntityMngr->AddDimension(i, m_pChild[7]->m_uID);
+				}
+			}
+		}
+	}
+	for (uint i = 0; i < m_uChildren; i++)
+	{
+		if (m_pChild[i]->m_uChildren != 0)
+		{
+			m_pChild[i]->AssignIDtoEntity();
+		}
+	}
 }
 //-------------------------------------------------------------------------------------------------------------------
 // You can assume the following is fine and does not need changes, you may add onto it but the code is fine as is
